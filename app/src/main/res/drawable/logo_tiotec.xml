@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Recurso de ejemplo propio, no es un logotipo oficial de la organización. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp" android:height="120dp"
+    android:viewportWidth="120" android:viewportHeight="120">
+    <path android:fillColor="#D4F4EB"
+        android:pathData="M60,4 A56,56 0,1 1,60 116 A56,56 0,1 1,60 4" />
+    <path android:fillColor="#006B61"
+        android:pathData="M60,20 L92,32 L92,58 C92,78 78,94 60,103 C42,94 28,78 28,58 L28,32 Z" />
+    <path android:fillColor="#00000000" android:strokeColor="#FFFFFF"
+        android:strokeWidth="7" android:strokeLineCap="round" android:strokeLineJoin="round"
+        android:pathData="M43,59 L55,71 L78,46" />
+    <path android:fillColor="#E5B858"
+        android:pathData="M94,11 L97,18 L105,21 L97,24 L94,32 L91,24 L83,21 L91,18 Z" />
+</vector>
