@@ -1,5 +1,7 @@
 package com.example.tiotec.ui
 
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -14,6 +16,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.tiotec.data.Revision
@@ -104,6 +108,22 @@ private fun DetalleRevision(
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text("Resultado y plan", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
         Text("${revision.nombre} · ${revision.dispositivo} · ${revision.sistema}")
+        val fotoGuardada = remember(revision.foto) {
+            if (revision.foto.isBlank()) null else BitmapFactory.decodeFile(revision.foto)
+        }
+        if (fotoGuardada != null) {
+            Image(
+                bitmap = fotoGuardada.asImageBitmap(),
+                contentDescription = "Foto del dispositivo evaluado",
+                modifier = Modifier.fillMaxWidth().height(200.dp),
+                contentScale = ContentScale.Fit
+            )
+        } else {
+            Text(
+                "La foto de esta evaluación no está disponible.",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
         val respuestas = revision.respuestas
         val afirmativas = respuestas.count { it == "Sí" }
         Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)) {
