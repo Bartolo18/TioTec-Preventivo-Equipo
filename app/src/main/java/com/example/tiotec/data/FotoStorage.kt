@@ -51,4 +51,16 @@ class FotoStorage(private val context: Context) {
         } finally { temporal.delete() }
     }
 
+    fun existe(path: String): Boolean = path.isNotBlank() && File(path).let {
+        it.parentFile?.canonicalFile == fotos.canonicalFile && it.isFile && it.length() > 0
+    }
+    fun borrarFoto(path: String) {
+        if (path.isNotBlank()) runCatching {
+            val file = File(path)
+            if (file.parentFile?.canonicalFile == fotos.canonicalFile) file.delete()
+        }
+    }
+    fun borrarCaptura(uri: String) {
+        if (uri.isNotBlank()) runCatching { context.contentResolver.delete(Uri.parse(uri), null, null) }
+    }
 }
