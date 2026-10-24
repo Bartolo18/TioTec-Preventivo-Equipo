@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material.icons.outlined.Devices
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.PhoneAndroid
@@ -103,9 +104,22 @@ private fun Campo(
     titulo: String, valor: String, error: String?, icono: ImageVector, cambiar: (String) -> Unit
 ) {
     OutlinedTextField(
-        value = valor, onValueChange = cambiar, label = { Text(titulo) },
-        leadingIcon = { Icon(icono, null) }, isError = error != null,
-        supportingText = { if (error != null) Text(error) }, singleLine = true,
+        value = valor,
+        onValueChange = cambiar,
+        label = { Text(titulo) },
+        leadingIcon = { Icon(icono, null) },
+        trailingIcon = {
+            if (error != null) {
+                Icon(
+                    Icons.Outlined.ErrorOutline,
+                    contentDescription = "Error en $titulo",
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
+        },
+        isError = error != null,
+        supportingText = { if (error != null) Text(error) },
+        singleLine = true,
         modifier = Modifier.fillMaxWidth()
     )
 }
@@ -124,8 +138,26 @@ private fun Opciones(opciones: List<String>, valor: String, cambiar: (String) ->
 
 @Composable
 private fun ErrorCampo(error: String?) {
-    if (error != null) Text(error, color = MaterialTheme.colorScheme.error,
-        style = MaterialTheme.typography.bodySmall)
+    if (error != null) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Icon(
+                Icons.Outlined.ErrorOutline,
+                contentDescription = "Error",
+                tint = MaterialTheme.colorScheme.error,
+                modifier = Modifier.size(18.dp)
+            )
+            Text(
+                error,
+                modifier = Modifier.weight(1f),
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)
