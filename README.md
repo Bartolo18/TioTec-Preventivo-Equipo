@@ -18,19 +18,6 @@ El trabajo se organizó por etapas en [Trello](https://trello.com/b/e0OPKumv/tio
 - Historial con foto y detalle, edición, eliminación, acciones realizadas y filtro de acciones pendientes.
 - Interfaz adaptable al ancho de pantalla y avisos en pantalla.
 
-## Cómo ejecutar
-
-1. Clonar este repositorio y abrir su carpeta raíz en Android Studio.
-2. Usar JDK 21 para Gradle y sincronizar el proyecto.
-3. Tener instalado el SDK de Android 35.
-4. Seleccionar un teléfono o emulador con Android 13 (API 33) o posterior y ejecutar `app`.
-
-Para compilar desde la raíz en Windows:
-
-```powershell
-.\gradlew.bat :app:assembleDebug
-```
-
 ## Organización del código
 
 - `MainActivity`: inicia la interfaz, aplica el tema y entrega el ancho de pantalla y el ViewModel a la app.
