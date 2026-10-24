@@ -38,5 +38,6 @@ El 24 de octubre de 2026 se compiló el proyecto y se ejecutó en el emulador Me
 - Una evaluación de prueba y su foto elegida continuaron en Historial después de cerrar y reabrir la app.
 - Al editar la evaluación, el cambio de respuesta y una nueva foto tomada con la cámara aparecieron en el detalle de Historial.
 - Se pudo marcar una acción, filtrar las pendientes y eliminar la evaluación de prueba. Las evaluaciones anteriores del emulador no se modificaron.
-
-Queda por documentar una comprobación específica de permiso de cámara denegado, giro del dispositivo y transición de los avisos.
+- El equipo verificó el aviso al denegar el permiso de cámara.
+- El equipo verificó la distribución de la interfaz al girar el dispositivo.
+- El equipo verificó que los avisos aparecen y desaparecen con una transición.
