@@ -10,6 +10,8 @@ import androidx.compose.material.icons.automirrored.outlined.Assignment
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Cloud
+import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
@@ -26,6 +28,8 @@ import kotlinx.coroutines.launch
 
 private const val FORMULARIO = "evaluacion"
 private const val HISTORIAL = "historial"
+private const val NUBE = "nube"
+private const val AVISOS = "avisos"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,6 +74,12 @@ fun AppTioTec(vm: TioTecViewModel, ancho: WindowWidthSizeClass) {
                     icon = { Icon(Icons.Outlined.History, null) },
                     modifier = Modifier.padding(horizontal = 12.dp)
                 )
+                NavigationDrawerItem(label = { Text("Nube") }, selected = destino == NUBE,
+                    onClick = { ir(NUBE); scope.launch { drawerState.close() } },
+                    icon = { Icon(Icons.Outlined.Cloud, null) }, modifier = Modifier.padding(horizontal = 12.dp))
+                NavigationDrawerItem(label = { Text("Avisos") }, selected = destino == AVISOS,
+                    onClick = { ir(AVISOS); scope.launch { drawerState.close() } },
+                    icon = { Icon(Icons.Outlined.Security, null) }, modifier = Modifier.padding(horizontal = 12.dp))
                 HorizontalDivider(Modifier.padding(vertical = 8.dp))
                 NavigationDrawerItem(
                     label = { Text("Cómo usar") },
@@ -86,6 +96,8 @@ fun AppTioTec(vm: TioTecViewModel, ancho: WindowWidthSizeClass) {
             TopAppBar(
                 title = { Text(when {
                     destino == HISTORIAL -> "Historial y plan"
+                    destino == NUBE -> "Evaluaciones en nube"
+                    destino == AVISOS -> "Avisos de seguridad"
                     estado.formulario.id != 0L -> "Editar evaluación"
                     else -> "Nueva evaluación"
                 }) },
@@ -108,6 +120,10 @@ fun AppTioTec(vm: TioTecViewModel, ancho: WindowWidthSizeClass) {
                     onClick = { ir(HISTORIAL) },
                     icon = { Icon(Icons.Outlined.History, null) }, label = { Text("Historial") }
                 )
+                NavigationBarItem(selected = destino == NUBE, onClick = { ir(NUBE) },
+                    icon = { Icon(Icons.Outlined.Cloud, null) }, label = { Text("Nube") })
+                NavigationBarItem(selected = destino == AVISOS, onClick = { ir(AVISOS) },
+                    icon = { Icon(Icons.Outlined.Security, null) }, label = { Text("Avisos") })
             }
         }
     ) { padding ->
@@ -137,6 +153,8 @@ fun AppTioTec(vm: TioTecViewModel, ancho: WindowWidthSizeClass) {
                 composable(FORMULARIO) {
                     EvaluacionScreen(vm, estado) { ir(HISTORIAL) }
                 }
+                composable(NUBE) { NubeScreen() }
+                composable(AVISOS) { AvisosScreen() }
                 composable(HISTORIAL) {
                     HistorialScreen(vm, estado, ancho, onNueva = { vm.nueva(); ir(FORMULARIO) },
                         onEditar = { revision -> vm.editar(revision); ir(FORMULARIO) })
@@ -150,7 +168,7 @@ fun AppTioTec(vm: TioTecViewModel, ancho: WindowWidthSizeClass) {
         AlertDialog(
             onDismissRequest = { mostrarAyuda = false },
             title = { Text("Cómo usar TíoTec") },
-            text = { Text("Usa datos ficticios. En Evaluar, responde las preguntas, elige el plazo y agrega una foto. Guarda para ver el resultado y las acciones en Historial. Allí también puedes editar o eliminar la evaluación.") },
+            text = { Text("Usa datos ficticios. En Evaluar, responde las preguntas, elige el plazo y agrega una foto. Guarda para ver el resultado y las acciones en Historial. Allí también puedes editar o eliminar la evaluación. En Nube puedes gestionar evaluaciones en el servidor. En Avisos puedes consultar alertas de seguridad de bibliotecas Java y Android.") },
             confirmButton = {
                 TextButton(onClick = { mostrarAyuda = false }) { Text("Entendido") }
             }
