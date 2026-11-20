@@ -29,9 +29,12 @@ data class PantallaEstado(
     val avisoId: Int = 0
 )
 
-class TioTecViewModel(application: Application) : AndroidViewModel(application) {
-    private val repositorio = RevisionRepository(application)
-    private val fotos = FotoStorage(application)
+class TioTecViewModel @JvmOverloads constructor(
+    application: Application,
+    private val repositorio: com.example.tiotec.data.RevisionStore = RevisionRepository(application),
+    private val fotos: com.example.tiotec.data.FotoStore = FotoStorage(application),
+    private val io: kotlinx.coroutines.CoroutineDispatcher = Dispatchers.IO
+) : AndroidViewModel(application) {
     private var versionFormulario = 0
     private val mutableEstado = MutableStateFlow(PantallaEstado())
     val estado: StateFlow<PantallaEstado> = mutableEstado
@@ -116,7 +119,7 @@ class TioTecViewModel(application: Application) : AndroidViewModel(application) 
         val actual = estado.value
         val ruta = actual.formulario.foto
         if (ruta.isNotBlank() && actual.revisiones.none { it.foto == ruta }) {
-            viewModelScope.launch(Dispatchers.IO) { fotos.borrarFoto(ruta) }
+            viewModelScope.launch(io) { fotos.borrarFoto(ruta) }
         }
     }
 
@@ -144,7 +147,7 @@ class TioTecViewModel(application: Application) : AndroidViewModel(application) 
         }
         mutableEstado.update { it.copy(ocupado = true) }
         return try {
-            val id = withContext(Dispatchers.IO) {
+            val id = withContext(io) {
                 val anterior = if (form.id == 0L) null else repositorio.buscar(form.id)
                 if (form.id != 0L && anterior == null) error("La revisión ya no existe.")
                 val revision = Revision(
@@ -170,7 +173,7 @@ class TioTecViewModel(application: Application) : AndroidViewModel(application) 
                     seleccionada = id, ocupado = false)
             }
             versionFormulario++
-            avisar("Evaluación guardada.")
+            avisar("Evaluación guardada en este dispositivo.")
             true
         } catch (_: Exception) {
             mutableEstado.update { it.copy(ocupado = false) }
@@ -182,7 +185,7 @@ class TioTecViewModel(application: Application) : AndroidViewModel(application) 
     fun eliminar(revision: Revision) {
         viewModelScope.launch {
             try {
-                withContext(Dispatchers.IO) {
+                withContext(io) {
                     repositorio.eliminar(revision)
                     fotos.borrarFoto(revision.foto)
                 }
@@ -196,7 +199,7 @@ class TioTecViewModel(application: Application) : AndroidViewModel(application) 
         if (indice !in 0..3) return
         val bit = 1 shl indice
         viewModelScope.launch {
-            try { withContext(Dispatchers.IO) { repositorio.marcarAccion(revision.id, bit, hecha) } }
+            try { withContext(io) { repositorio.marcarAccion(revision.id, bit, hecha) } }
             catch (_: Exception) { avisar("No se pudo guardar el avance.", true) }
         }
     }
@@ -233,9 +236,9 @@ class TioTecViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             mutableEstado.update { it.copy(ocupado = true) }
             try {
-                val ruta = withContext(Dispatchers.IO) { fotos.importar(uri) }
+                val ruta = withContext(io) { fotos.importar(uri) }
                 if (version != versionFormulario) {
-                    withContext(Dispatchers.IO) { fotos.borrarFoto(ruta) }
+                    withContext(io) { fotos.borrarFoto(ruta) }
                     avisar("La foto se descartó porque cambiaste de formulario.", true)
                     return@launch
                 }
@@ -244,7 +247,7 @@ class TioTecViewModel(application: Application) : AndroidViewModel(application) 
                 cambiarFormulario(estado.value.formulario.copy(foto = ruta)) { anteriorError, nuevoError ->
                     anteriorError.copy(foto = nuevoError.foto)
                 }
-                if (!guardada && anterior.isNotBlank()) withContext(Dispatchers.IO) { fotos.borrarFoto(anterior) }
+                if (!guardada && anterior.isNotBlank()) withContext(io) { fotos.borrarFoto(anterior) }
                 avisar("Foto agregada.")
             } catch (_: Exception) { avisar("No se pudo leer la imagen. Elige otra foto.", true) }
             finally {
