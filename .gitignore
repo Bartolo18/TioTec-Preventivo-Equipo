@@ -5,3 +5,14 @@ build/
 app/build/
 local.properties
 *.iml
+
+.gradle-local/
+.gradle*/
+firma.properties
+firma/*.jks
+backend/datos/
+backend/target/
+logs/
+entrega/
+tools/cobertura/*.jar
+tools/cobertura/classes/

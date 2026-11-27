@@ -8,16 +8,16 @@ import androidx.core.content.FileProvider
 import java.io.File
 import java.util.UUID
 
-class FotoStorage(private val context: Context) {
+class FotoStorage(private val context: Context) : FotoStore {
     private val fotos = File(context.filesDir, "fotos").apply { mkdirs() }
     private val capturas = File(context.filesDir, "capturas").apply { mkdirs() }
 
-    fun nuevaCaptura(): String {
+    override fun nuevaCaptura(): String {
         val file = File.createTempFile("camara_", ".jpg", capturas)
         return FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file).toString()
     }
 
-    fun importar(uri: Uri): String {
+    override fun importar(uri: Uri): String {
         val temporal = File.createTempFile("importar_", ".tmp", context.cacheDir)
         val destino = File(fotos, "${UUID.randomUUID()}.jpg")
         try {
@@ -51,16 +51,16 @@ class FotoStorage(private val context: Context) {
         } finally { temporal.delete() }
     }
 
-    fun existe(path: String): Boolean = path.isNotBlank() && File(path).let {
+    override fun existe(path: String): Boolean = path.isNotBlank() && File(path).let {
         it.parentFile?.canonicalFile == fotos.canonicalFile && it.isFile && it.length() > 0
     }
-    fun borrarFoto(path: String) {
+    override fun borrarFoto(path: String) {
         if (path.isNotBlank()) runCatching {
             val file = File(path)
             if (file.parentFile?.canonicalFile == fotos.canonicalFile) file.delete()
         }
     }
-    fun borrarCaptura(uri: String) {
+    override fun borrarCaptura(uri: String) {
         if (uri.isNotBlank()) runCatching { context.contentResolver.delete(Uri.parse(uri), null, null) }
     }
 }
