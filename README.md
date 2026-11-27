@@ -140,8 +140,6 @@ La pauta pide una captura del APK y del JKS. Falta adjuntar la captura real ante
 
 ## Trabajo en equipo
 
-Repositorio: https://github.com/Bartolo18/TioTec-Preventivo-Equipo
+Usamos Trello para organizar las tareas de esta entrega. En el tablero iremos registrando qué toma cada integrante y qué queda pendiente para la presentación.
 
-Trello: https://trello.com/b/e0OPKumv/tiotec-parciales-2-y-3
-
-La entrega debe incluir las evidencias reales de tareas y aportes de cada integrante. Falta comprobar esas evidencias y adjuntar las capturas correspondientes.
+[Tablero de TíoTec en Trello](https://trello.com/b/e0OPKumv/tiotec-parciales-2-y-3)
