@@ -7,7 +7,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import com.example.tiotec.ui.AppTioTec
+import com.example.tiotec.ui.screens.AppTioTec
 import com.example.tiotec.viewmodel.TioTecViewModel
 
 class MainActivity : ComponentActivity() {
