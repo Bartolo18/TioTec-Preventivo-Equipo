@@ -1,9 +1,9 @@
 package com.example.tiotec.validation
 
-import com.example.tiotec.model.Errores
-import com.example.tiotec.model.Formulario
-import com.example.tiotec.model.experiencias
-import com.example.tiotec.model.respuestasValidas
+import com.example.tiotec.data.model.Errores
+import com.example.tiotec.data.model.Formulario
+import com.example.tiotec.data.model.experiencias
+import com.example.tiotec.data.model.respuestasValidas
 
 // Reglas puras: no dependen de Compose ni de Android.
 object Validacion {
