@@ -1,77 +1,147 @@
 # TíoTec Preventivo
 
-Proyecto DSY1105, equipo 3. Integrantes: Bárbara Tolorza Escobar y Christopher Jared Villa Vera.
+DSY1105 Desarrollo de Aplicaciones Móviles. Experiencia de Aprendizaje 3.
 
-La app permite evaluar cuatro hábitos digitales de un perfil y equipo ficticios: respaldo, actualizaciones, autenticación y recuperación. Genera acciones priorizadas y registra su avance.
+Equipo 3: Bárbara Tolorza Escobar y Christopher Jared Villa Vera.
 
-## Funcionalidades
+## Proyecto
 
-- **Evaluar e Historial:** formulario validado, cámara/galería, plan, edición y eliminación. Room guarda evaluaciones y rutas; las fotos quedan en archivos privados.
-- **Nube:** CRUD mediante Retrofit y un microservicio Spring Boot con H2 persistente.
-- **Avisos:** API pública GitHub Advisory para bibliotecas Java/Android del ecosistema Maven, con gravedad, fecha y enlace.
-- Material 3, Navigation Compose y ViewModel con StateFlow, estados de carga y errores recuperables.
-- Pruebas de lógica, pruebas de integración del backend y cobertura JaCoCo.
-- Configuración release, llave académica privada y APK firmado.
+TíoTec permite registrar un perfil y un dispositivo ficticios para revisar cuatro hábitos: respaldo, actualizaciones, autenticación y recuperación de la cuenta. Las respuestas generan un plan de acciones que se puede consultar y actualizar.
+
+La aplicación tiene cuatro secciones:
+
+- Evaluar: formulario con validación, preguntas y foto del dispositivo.
+- Historial: evaluaciones guardadas con Room, edición, eliminación y avance del plan.
+- Servidor: crear, consultar, editar y eliminar evaluaciones mediante un microservicio Spring Boot.
+- Mi sistema: consultar el soporte de versiones de Android y Windows mediante la API externa endoflife.date.
+
+La interfaz utiliza Jetpack Compose y Material 3. Los ViewModel mantienen el estado con StateFlow y los repositorios acceden a Room o a los servicios con Retrofit.
+
+## Organización del código
+
+El código Android está en `app/src/main/java/com/example/tiotec`.
+
+| Carpeta | Contenido |
+|---|---|
+| `data/model` | Datos de los formularios y respuestas de las APIs |
+| `data/remote` | `ApiService.kt` con las interfaces HTTP y `RetrofitInstance.kt` con las conexiones |
+| `repository` | Acceso a las evaluaciones y al catálogo de soporte |
+| `viewmodel` | Estado de las pantallas y operaciones de la app |
+| `ui/screens` | Pantallas de Compose |
+| `data` | Base de datos Room y almacenamiento de fotos |
+| `validation` | Validación del formulario local |
+
+El backend está en `backend/src/main/java/cl/tiotec`. `RevisionesApplication.java` inicia Spring Boot. En `revision` están el controlador HTTP, el servicio, el repositorio JPA, la entidad y los datos de entrada y salida.
+
+La sección Servidor utiliza `ServidorScreen.kt`, `ServidorViewModel.kt` y `ServidorRepository.kt`. El CRUD local de Historial conserva su propio repositorio.
+
+## Endpoints
+
+| Servicio | Método | Ruta | Uso |
+|---|---|---|---|
+| Spring Boot | GET | `/api/salud` | Comprobar que el servidor responde |
+| Spring Boot | GET | `/api/revisiones` | Listar evaluaciones |
+| Spring Boot | GET | `/api/revisiones/{id}` | Consultar una evaluación |
+| Spring Boot | POST | `/api/revisiones` | Crear una evaluación |
+| Spring Boot | PUT | `/api/revisiones/{id}` | Editar una evaluación |
+| Spring Boot | DELETE | `/api/revisiones/{id}` | Eliminar una evaluación |
+| endoflife.date | GET | `https://endoflife.date/api/v1/products/android/` | Obtener versiones de Android |
+| endoflife.date | GET | `https://endoflife.date/api/v1/products/windows/` | Obtener versiones de Windows |
+
+Las solicitudes de creación y edición incluyen nombre, dispositivo, sistema, experiencia, plazo, cuatro respuestas y avance de acciones. El servidor valida los campos y devuelve el registro con su identificador y fecha.
+
+La API externa entrega un catálogo. Después de descargarlo, la persona elige una versión y ve su estado de soporte y las fechas disponibles. Los valores que la fuente no informa se muestran como desconocidos.
 
 ## Cómo ejecutar
 
-1. Abrir este directorio en Android Studio, con Java 21, Android SDK 35 y un emulador API 33 o superior.
-2. Abrir **Iniciar_servidor.cmd** y mantener la ventana abierta. Si falta el JAR, lo compila con Maven instalado.
-3. Instalar **entrega/TioTec-firmado.apk**. **Conectar_dispositivo.cmd** permite instalarlo y abrirlo.
-4. En Nube, pulsar Actualizar. Crear, editar y eliminar un caso ficticio. Avisos necesita internet.
+Se utiliza Java 21 para Gradle, Android SDK 35 y un emulador o teléfono con Android 13 / API 33 o superior. Para compilar el backend se necesita Maven. La primera sincronización requiere internet.
 
-Paquete de esta entrega: `com.example.tiotec.entrega`.
-
-El emulador Android estándar accede al PC mediante `http://10.0.2.2:8080/`. En teléfono físico por USB se utiliza `http://127.0.0.1:8080/` con `adb reverse tcp:8080 tcp:8080`. El servidor escucha solo en el PC local. No hay una nube pública publicada.
-
-La base de datos queda en `backend/datos` y persiste al reiniciar. Los tests usan otra base en memoria.
-
-Comandos desde backend (Maven 3.6.3 o superior):
+1. Extraer el ZIP y abrir en Android Studio la carpeta extraída que contiene `settings.gradle.kts` y `app`.
+2. Sincronizar Gradle y comprobar que Android Studio tiene configurado el SDK del computador. `local.properties` se genera en cada equipo.
+3. Abrir `backend` como proyecto Maven en el IDE y ejecutar `RevisionesApplication`. También puede iniciarse desde una terminal en `backend`:
 
 ```powershell
-mvn test
+mvn spring-boot:run
+```
+
+Para generar y ejecutar el JAR desde `backend`:
+
+```powershell
 mvn package
 java -jar target/revisiones-1.1.0.jar
 ```
 
-Comandos desde la raíz del proyecto Android:
+4. Ejecutar el módulo `app` desde Android Studio, o instalar `entrega/TioTec-firmado.apk`.
+5. Probar una evaluación local, crear y editar una evaluación en Servidor y consultar una versión en Mi sistema.
+
+En un emulador Android estándar, el backend se consulta en `http://10.0.2.2:8080/`. Para un teléfono conectado por USB se utiliza `http://127.0.0.1:8080/` y debe configurarse la conexión con:
 
 ```powershell
-.\gradlew.bat testDebugUnitTest coberturaLogica
-.\gradlew.bat assembleRelease
+adb reverse tcp:8080 tcp:8080
 ```
 
-## Endpoints
+Mi sistema necesita acceso a internet. El backend debe permanecer iniciado para trabajar en Servidor.
 
-| Origen | Método y ruta |
-|---|---|
-| Microservicio | GET /api/salud |
-| Microservicio | GET y POST /api/revisiones |
-| Microservicio | GET, PUT y DELETE /api/revisiones/{id} |
-| API externa | GET https://api.github.com/advisories?per_page=6&ecosystem=maven |
+## Almacenamiento
 
-[Documentación técnica, arquitectura, reglas y límites](docs/Arquitectura.md).
+Room guarda el historial local y las rutas de las fotos. Las imágenes se copian al almacenamiento privado de la app.
+
+El backend utiliza H2 en archivo. Al iniciarlo desde `backend`, la base queda en `backend/datos/revisiones.mv.db` y conserva los datos al reiniciar. Las evaluaciones del servidor y el historial local son registros separados.
 
 ## Pruebas
 
-Fuentes en `app/src/test` y `backend/src/test`. JaCoCo mide model, validation, repository y viewmodel. Reporte: `app/build/reports/jacoco/coberturaLogica`. La cámara y la interfaz requieren comprobación del APK.
+Las pruebas de lógica están en `app/src/test/java` y las de pantalla en `app/src/androidTest/java`, como indica la guía 15.
 
-Los resultados efectivamente verificados se detallan en `docs/Resultado_verificacion.md`, con evidencia en `entrega/evidencias`.
+- Kotest y MockK prueban el ViewModel del servidor y los repositorios, simulando sus dependencias.
+- `kotlinx-coroutines-test` permite controlar las operaciones asíncronas.
+- Las pruebas JUnit 4 existentes se ejecutan en JUnit Platform mediante Vintage.
+- Las pruebas Compose utilizan `createAndroidComposeRule`, como el ejemplo de pantalla de la guía.
+- El backend tiene pruebas de integración con MockMvc y una base H2 en memoria.
 
-## Firma
+En la copia local de la entrega, las cinco pruebas de pantalla se ejecutaron correctamente en el emulador API 37 el 25 de noviembre de 2026. Se utiliza Espresso 3.7.0 para corregir la compatibilidad de la herramienta de pruebas con Android reciente. La salida real está en `entrega/evidencias/pruebas-pantalla.txt`.
 
-Se utiliza un KeyStore JKS RSA de 3072 bits, alias `tiotec`. Gradle lee `firma.properties`. La llave y contraseñas están en la entrega privada y se excluyen de GitHub.
+Desde la raíz del proyecto Android:
 
-En Android Studio: Build > Generate Signed App Bundle / APK > APK > seleccionar el KeyStore, alias y contraseñas > release. Mantener la misma llave para actualizar instalaciones firmadas con ella.
+```powershell
+.\gradlew.bat testDebugUnitTest coberturaLogica
+.\gradlew.bat connectedDebugAndroidTest
+```
 
-El APK y la verificación del certificado quedan en `entrega`. Un clon público puede compilar debug; para release necesita una llave propia o la llave académica privada.
+La primera tarea genera el informe JaCoCo en `app/build/reports/jacoco/coberturaLogica` y verifica un mínimo de 80% de cobertura de líneas en ViewModel y Repository. Las pruebas de pantalla necesitan un dispositivo conectado.
 
-## Colaboración y defensa
+Desde `backend`:
+
+```powershell
+mvn test
+```
+
+Los resultados comprobados y las verificaciones pendientes se registran en `entrega/evidencias/VERIFICACION.txt`. Una prueba con una API simulada no comprueba la conectividad real del teléfono.
+
+## APK firmado
+
+La configuración `Grupo3` está en `app/build.gradle.kts`. Lee los datos de `firma.properties` y utiliza la llave `firma/Grupo3.jks`, con alias `tiotec`.
+
+Para generar el APK desde Android Studio:
+
+1. Abrir Build > Generate Signed App Bundle / APK.
+2. Elegir APK.
+3. Seleccionar `firma/Grupo3.jks`, ingresar su contraseña y el alias `tiotec`.
+4. Elegir la variante release y generar el archivo.
+
+También puede compilarse con:
+
+```powershell
+.\gradlew.bat assembleRelease
+```
+
+El APK de entrega está en `entrega/TioTec-firmado.apk`. `entrega/evidencias/firma-apk.txt` contiene la verificación de su certificado. La llave y su configuración se incluyen en la entrega privada.
+
+La pauta pide una captura del APK y del JKS. Falta adjuntar la captura real antes de entregar.
+
+## Trabajo en equipo
 
 Repositorio: https://github.com/Bartolo18/TioTec-Preventivo-Equipo
 
-Tablero existente: https://trello.com/b/e0OPKumv/tiotec-parciales-2-y-3
+Trello: https://trello.com/b/e0OPKumv/tiotec-parciales-2-y-3
 
-[Tareas técnicas para organizar en Trello](docs/Planificacion.csv). El CSV no sustituye los commits ni las tareas reales de cada integrante.
-
-[Guía para estudiar y practicar la defensa individual](docs/Defensa.md).
+La entrega debe incluir las evidencias reales de tareas y aportes de cada integrante. Falta comprobar esas evidencias y adjuntar las capturas correspondientes.
