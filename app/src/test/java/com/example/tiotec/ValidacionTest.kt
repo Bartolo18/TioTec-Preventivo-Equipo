@@ -1,6 +1,6 @@
 package com.example.tiotec
 
-import com.example.tiotec.model.*
+import com.example.tiotec.data.model.*
 import com.example.tiotec.validation.Validacion
 import org.junit.Assert.*
 import org.junit.Test
@@ -26,7 +26,7 @@ class ValidacionTest {
         assertTrue(Validacion.revisar(Formulario()).respuestas.all { it != null })
     }
     @Test fun validaNubeSinDependerDeAndroid() {
-        val datos = DatosNube(" Luffy ", " Notebook ", " Windows ", "Básico", 30, listOf("Sí","No","No sé","Sí"))
+        val datos = DatosRevision(" Luffy ", " Notebook ", " Windows ", "Básico", 30, listOf("Sí","No","No sé","Sí"))
         assertTrue(datos.errores().isEmpty())
         assertEquals("Luffy", datos.normalizados().nombre)
         val invalidos = listOf(datos.copy(nombre = "x"), datos.copy(dispositivo = ""),
@@ -34,7 +34,7 @@ class ValidacionTest {
             datos.copy(respuestas = emptyList()), datos.copy(respuestas = List(4) { "Otro" }),
             datos.copy(accionesHechas = -1), datos.copy(accionesHechas = 16))
         invalidos.forEach { assertTrue(it.errores().isNotEmpty()) }
-        val r = RevisionNube(1,1,datos.nombre,datos.dispositivo,datos.sistema,datos.experiencia,datos.diasRevision,datos.respuestas,0)
+        val r = RevisionRemota(1,1,datos.nombre,datos.dispositivo,datos.sistema,datos.experiencia,datos.diasRevision,datos.respuestas,0)
         assertEquals(datos, r.datos())
     }
 }

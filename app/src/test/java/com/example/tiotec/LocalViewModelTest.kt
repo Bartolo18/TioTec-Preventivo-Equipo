@@ -2,7 +2,7 @@ package com.example.tiotec
 import android.app.Application
 import android.net.Uri
 import com.example.tiotec.data.*
-import com.example.tiotec.model.*
+import com.example.tiotec.data.model.*
 import com.example.tiotec.viewmodel.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
