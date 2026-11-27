@@ -65,17 +65,6 @@ class NubeViewModel(private val repository: NubeRepository = NubeRepositoryRemot
         }
     }
 }
-fun mensajeError(error: Exception): String = when (error) {
-    is HttpException -> when (error.code()) {
-        400 -> "El servidor rechazó los datos. Revisa el formulario."
-        404 -> "La evaluación ya no existe. Vuelve a consultar."
-        403, 429 -> "El servicio limitó las consultas. Intenta más tarde."
-        else -> "El servidor no pudo completar la operación (${error.code()})."
-    }
-    is IOException -> "No hay conexión con el servicio. Comprueba que esté iniciado y vuelve a intentar."
-    else -> "No se pudo completar la operación. Intenta nuevamente."
-}
-
 data class AvisosEstado(val avisos: List<AvisoSeguridad> = emptyList(), val ocupado: Boolean = false, val mensaje: String = "", val consultado: Boolean = false)
 class AvisosViewModel(private val repository: AvisosRepository = AvisosRepositoryRemoto()) : ViewModel() {
     private val mutable = MutableStateFlow(AvisosEstado())
