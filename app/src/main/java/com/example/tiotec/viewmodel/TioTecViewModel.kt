@@ -6,8 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tiotec.data.FotoStorage
 import com.example.tiotec.data.Revision
-import com.example.tiotec.model.Errores
-import com.example.tiotec.model.Formulario
+import com.example.tiotec.data.model.Errores
+import com.example.tiotec.data.model.Formulario
 import com.example.tiotec.repository.RevisionRepository
 import com.example.tiotec.validation.Validacion
 import kotlinx.coroutines.Dispatchers
