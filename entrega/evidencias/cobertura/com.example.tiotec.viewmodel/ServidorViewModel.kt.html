@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServidorViewModel.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Logica de TioTec</a> &gt; <a href="index.source.html" class="el_package">com.example.tiotec.viewmodel</a> &gt; <span class="el_source">ServidorViewModel.kt</span></div><h1>ServidorViewModel.kt</h1><pre class="source lang-java linenums">package com.example.tiotec.viewmodel
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.tiotec.data.model.DatosRevision
+import com.example.tiotec.data.model.RevisionRemota
+import com.example.tiotec.repository.ServidorRepository
+import com.example.tiotec.repository.ServidorRepositoryRemoto
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
+
+<span class="fc" id="L18">data class ServidorEstado(</span>
+<span class="fc" id="L19">    val revisiones: List&lt;RevisionRemota&gt; = emptyList(),</span>
+<span class="fc" id="L20">    val datos: DatosRevision = DatosRevision(),</span>
+<span class="fc" id="L21">    val editando: Long? = null,</span>
+<span class="fc" id="L22">    val mostrarFormulario: Boolean = false,</span>
+<span class="fc" id="L23">    val ocupado: Boolean = false,</span>
+<span class="fc" id="L24">    val errores: List&lt;String&gt; = emptyList(),</span>
+<span class="pc" id="L25">    val mensaje: String = &quot;&quot;,</span>
+<span class="fc" id="L26">    val fallo: Boolean = false,</span>
+<span class="pc" id="L27">    val consultado: Boolean = false</span>
+<span class="fc" id="L28">)</span>
+
+<span class="pc" id="L30">class ServidorViewModel(</span>
+<span class="pc" id="L31">    private val repository: ServidorRepository = ServidorRepositoryRemoto()</span>
+<span class="pc" id="L32">) : ViewModel() {</span>
+<span class="fc" id="L33">    private val mutable = MutableStateFlow(ServidorEstado())</span>
+<span class="fc" id="L34">    val estado: StateFlow&lt;ServidorEstado&gt; = mutable.asStateFlow()</span>
+
+    fun nueva() {
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (estado.value.ocupado) return</span>
+<span class="fc" id="L38">        mutable.update {</span>
+<span class="fc" id="L39">            it.copy(</span>
+<span class="fc" id="L40">                datos = DatosRevision(),</span>
+<span class="fc" id="L41">                editando = null,</span>
+<span class="fc" id="L42">                mostrarFormulario = true,</span>
+<span class="fc" id="L43">                errores = emptyList(),</span>
+<span class="fc" id="L44">                mensaje = &quot;&quot;,</span>
+<span class="fc" id="L45">                fallo = false</span>
+<span class="fc" id="L46">            )</span>
+        }
+<span class="fc" id="L48">    }</span>
+
+    fun cancelar() {
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        if (estado.value.ocupado) return</span>
+<span class="fc" id="L52">        mutable.update {</span>
+<span class="fc" id="L53">            it.copy(mostrarFormulario = false, editando = null, errores = emptyList())</span>
+        }
+<span class="fc" id="L55">    }</span>
+
+    fun cambiar(datos: DatosRevision) {
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (estado.value.ocupado) return</span>
+<span class="fc" id="L59">        mutable.update { it.copy(datos = datos, errores = emptyList()) }</span>
+<span class="fc" id="L60">    }</span>
+
+<span class="fc" id="L62">    fun consultar() = operar {</span>
+<span class="fc" id="L63">        val lista = repository.listar()</span>
+<span class="fc" id="L64">        mutable.update {</span>
+<span class="fc" id="L65">            it.copy(</span>
+<span class="fc" id="L66">                revisiones = lista,</span>
+<span class="fc" id="L67">                consultado = true,</span>
+<span class="fc" id="L68">                mensaje = &quot;Evaluaciones consultadas en el servidor.&quot;</span>
+<span class="fc" id="L69">            )</span>
+        }
+<span class="fc" id="L71">    }</span>
+
+<span class="fc" id="L73">    fun editar(id: Long) = operar {</span>
+<span class="fc" id="L74">        val revision = repository.buscar(id)</span>
+<span class="fc" id="L75">        mutable.update {</span>
+<span class="fc" id="L76">            it.copy(</span>
+<span class="fc" id="L77">                datos = revision.datos(),</span>
+<span class="fc" id="L78">                editando = id,</span>
+<span class="fc" id="L79">                mostrarFormulario = true,</span>
+<span class="fc" id="L80">                errores = emptyList()</span>
+<span class="fc" id="L81">            )</span>
+        }
+<span class="fc" id="L83">    }</span>
+
+    fun guardar() {
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (estado.value.ocupado) return</span>
+
+<span class="fc" id="L88">        val errores = estado.value.datos.errores()</span>
+<span class="fc bfc" id="L89" title="All 4 branches covered.">        if (errores.isNotEmpty()) {</span>
+<span class="fc" id="L90">            mutable.update { it.copy(errores = errores) }</span>
+<span class="fc" id="L91">            return</span>
+        }
+
+<span class="fc" id="L94">        val id = estado.value.editando</span>
+<span class="fc" id="L95">        val datos = estado.value.datos</span>
+<span class="fc" id="L96">        operar {</span>
+<span class="fc" id="L97">            val guardada = repository.guardar(id, datos)</span>
+<span class="fc" id="L98">            mutable.update { actual -&gt;</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">                val lista = actual.revisiones.filterNot { it.id == guardada.id } + guardada</span>
+<span class="fc" id="L100">                actual.copy(</span>
+<span class="fc" id="L101">                    revisiones = lista.sortedByDescending { it.fecha },</span>
+<span class="fc" id="L102">                    mostrarFormulario = false,</span>
+<span class="fc" id="L103">                    editando = null,</span>
+<span class="fc" id="L104">                    datos = DatosRevision(),</span>
+<span class="fc" id="L105">                    consultado = true,</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">                    mensaje = if (id == null) {</span>
+<span class="fc" id="L107">                        &quot;Evaluación creada en el servidor.&quot;</span>
+                    } else {
+<span class="fc" id="L109">                        &quot;Cambios guardados en el servidor.&quot;</span>
+                    }
+<span class="fc" id="L111">                )</span>
+            }
+<span class="fc" id="L113">        }</span>
+<span class="fc" id="L114">    }</span>
+
+<span class="fc" id="L116">    fun eliminar(id: Long) = operar {</span>
+<span class="fc" id="L117">        repository.eliminar(id)</span>
+<span class="fc" id="L118">        mutable.update {</span>
+<span class="fc" id="L119">            it.copy(</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">                revisiones = it.revisiones.filterNot { revision -&gt; revision.id == id },</span>
+<span class="fc" id="L121">                mensaje = &quot;Evaluación eliminada del servidor.&quot;</span>
+<span class="fc" id="L122">            )</span>
+        }
+<span class="fc" id="L124">    }</span>
+
+    private fun operar(tarea: suspend () -&gt; Unit) {
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (estado.value.ocupado) return</span>
+<span class="fc" id="L128">        mutable.update { it.copy(ocupado = true, fallo = false, mensaje = &quot;&quot;) }</span>
+
+<span class="fc" id="L130">        viewModelScope.launch {</span>
+<span class="fc" id="L131">            try {</span>
+<span class="fc" id="L132">                tarea()</span>
+<span class="fc" id="L133">            } catch (cancelada: CancellationException) {</span>
+<span class="fc" id="L134">                throw cancelada</span>
+<span class="fc" id="L135">            } catch (error: Exception) {</span>
+<span class="fc" id="L136">                mutable.update { it.copy(fallo = true, mensaje = mensajeError(error)) }</span>
+            } finally {
+<span class="fc" id="L138">                mutable.update { it.copy(ocupado = false) }</span>
+            }
+<span class="fc" id="L140">        }</span>
+<span class="fc" id="L141">    }</span>
+}
+
+<span class="fc" id="L144">fun mensajeError(error: Exception): String = when (error) {</span>
+<span class="fc bfc" id="L145" title="All 6 branches covered.">    is HttpException -&gt; when (error.code()) {</span>
+<span class="fc" id="L146">        400 -&gt; &quot;El servidor rechazó los datos. Revisa el formulario.&quot;</span>
+<span class="fc" id="L147">        404 -&gt; &quot;La evaluación ya no existe. Vuelve a consultar.&quot;</span>
+<span class="fc" id="L148">        403, 429 -&gt; &quot;El servicio limitó las consultas. Intenta más tarde.&quot;</span>
+<span class="fc" id="L149">        else -&gt; &quot;El servidor no pudo completar la operación (${error.code()}).&quot;</span>
+    }
+<span class="fc bfc" id="L151" title="All 2 branches covered.">    is IOException -&gt; &quot;No hay conexión con el servicio. Comprueba que esté iniciado y vuelve a intentar.&quot;</span>
+<span class="fc" id="L152">    else -&gt; &quot;No se pudo completar la operación. Intenta nuevamente.&quot;</span>
+<span class="fc" id="L153">}</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Formulario.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Logica de TioTec</a> &gt; <a href="index.source.html" class="el_package">com.example.tiotec.data.model</a> &gt; <span class="el_source">Formulario.kt</span></div><h1>Formulario.kt</h1><pre class="source lang-java linenums">package com.example.tiotec.data.model
+
+<span class="fc" id="L3">data class Formulario(</span>
+<span class="fc" id="L4">    val id: Long = 0,</span>
+<span class="fc" id="L5">    val nombre: String = &quot;&quot;,</span>
+<span class="fc" id="L6">    val dispositivo: String = &quot;&quot;,</span>
+<span class="fc" id="L7">    val sistema: String = &quot;&quot;,</span>
+<span class="fc" id="L8">    val experiencia: String = &quot;&quot;,</span>
+<span class="fc" id="L9">    val foto: String = &quot;&quot;,</span>
+<span class="fc" id="L10">    val diasRevision: Int = 30,</span>
+<span class="fc" id="L11">    val ficticio: Boolean = false,</span>
+<span class="fc bfc" id="L12" title="All 2 branches covered.">    val respuestas: List&lt;String&gt; = List(4) { &quot;&quot; }</span>
+<span class="fc" id="L13">)</span>
+
+<span class="fc" id="L15">data class Errores(</span>
+<span class="fc" id="L16">    val nombre: String? = null,</span>
+<span class="pc" id="L17">    val dispositivo: String? = null,</span>
+<span class="pc" id="L18">    val sistema: String? = null,</span>
+<span class="pc" id="L19">    val experiencia: String? = null,</span>
+<span class="fc" id="L20">    val foto: String? = null,</span>
+<span class="fc" id="L21">    val diasRevision: String? = null,</span>
+<span class="fc" id="L22">    val ficticio: String? = null,</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">    val respuestas: List&lt;String?&gt; = List(4) { null }</span>
+<span class="fc" id="L24">) {</span>
+    val hayErrores: Boolean
+<span class="fc bfc" id="L26" title="All 4 branches covered.">        get() = listOf(nombre, dispositivo, sistema, experiencia, foto, diasRevision, ficticio).any { it != null } ||</span>
+<span class="fc bfc" id="L27" title="All 4 branches covered.">            respuestas.any { it != null }</span>
+}
+
+<span class="pc" id="L30">data class Pregunta(val titulo: String, val texto: String, val accion: String, val consejo: String)</span>
+
+<span class="pc" id="L32">val preguntas = listOf(</span>
+<span class="fc" id="L33">    Pregunta(&quot;Respaldos&quot;, &quot;¿El equipo de prueba tiene una copia de seguridad reciente?&quot;,</span>
+<span class="fc" id="L34">        &quot;Revisar y hacer una copia de seguridad de prueba&quot;,</span>
+<span class="fc" id="L35">        &quot;Una copia reciente ayuda a recuperar archivos si el equipo falla o se pierde.&quot;),</span>
+<span class="fc" id="L36">    Pregunta(&quot;Actualizaciones&quot;, &quot;¿El sistema del equipo de prueba está actualizado?&quot;,</span>
+<span class="fc" id="L37">        &quot;Revisar las actualizaciones del sistema&quot;,</span>
+<span class="fc" id="L38">        &quot;Actualizar el sistema corrige fallas y mantiene sus protecciones al día.&quot;),</span>
+<span class="fc" id="L39">    Pregunta(&quot;Autenticación&quot;, &quot;¿La cuenta ficticia usa verificación en dos pasos?&quot;,</span>
+<span class="fc" id="L40">        &quot;Revisar la verificación en dos pasos&quot;,</span>
+<span class="fc" id="L41">        &quot;Un segundo paso dificulta el acceso si alguien conoce la contraseña.&quot;),</span>
+<span class="fc" id="L42">    Pregunta(&quot;Recuperación&quot;, &quot;¿La cuenta ficticia tiene un método de recuperación?&quot;,</span>
+<span class="fc" id="L43">        &quot;Revisar la recuperación de la cuenta&quot;,</span>
+<span class="fc" id="L44">        &quot;Un método de recuperación vigente permite volver a entrar si pierdes el acceso.&quot;)</span>
+)
+
+<span class="fc" id="L47">val experiencias = listOf(&quot;Básico&quot;, &quot;Medio&quot;, &quot;Avanzado&quot;)</span>
+<span class="fc" id="L48">val respuestasValidas = listOf(&quot;Sí&quot;, &quot;No&quot;, &quot;No sé&quot;)</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

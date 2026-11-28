@@ -1,0 +1,2 @@
+CRUD HTTP real aprobado: POST 201, GET listado y detalle 200, PUT 200, DELETE 204.
+Base H2 de prueba separada del proyecto.

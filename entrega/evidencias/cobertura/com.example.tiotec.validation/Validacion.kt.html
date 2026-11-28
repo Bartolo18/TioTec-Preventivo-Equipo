@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Validacion.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Logica de TioTec</a> &gt; <a href="index.source.html" class="el_package">com.example.tiotec.validation</a> &gt; <span class="el_source">Validacion.kt</span></div><h1>Validacion.kt</h1><pre class="source lang-java linenums">package com.example.tiotec.validation
+
+import com.example.tiotec.data.model.Errores
+import com.example.tiotec.data.model.Formulario
+import com.example.tiotec.data.model.experiencias
+import com.example.tiotec.data.model.respuestasValidas
+
+// Reglas puras: no dependen de Compose ni de Android.
+object Validacion {
+<span class="fc" id="L10">    fun revisar(f: Formulario) = Errores(</span>
+<span class="fc bfc" id="L11" title="All 6 branches covered.">        nombre = if (f.nombre.trim().length !in 2..40) &quot;Escribe un nombre ficticio de 2 a 40 caracteres.&quot; else null,</span>
+<span class="fc bfc" id="L12" title="All 6 branches covered.">        dispositivo = if (f.dispositivo.trim().length !in 2..50) &quot;Describe un dispositivo de 2 a 50 caracteres.&quot; else null,</span>
+<span class="fc bfc" id="L13" title="All 6 branches covered.">        sistema = if (f.sistema.trim().length !in 2..30) &quot;Escribe un sistema de 2 a 30 caracteres.&quot; else null,</span>
+<span class="fc bfc" id="L14" title="All 2 branches covered.">        experiencia = if (f.experiencia !in experiencias) &quot;Selecciona un nivel.&quot; else null,</span>
+<span class="fc bfc" id="L15" title="All 2 branches covered.">        foto = if (f.foto.isBlank()) &quot;Agrega una foto del dispositivo de prueba.&quot; else null,</span>
+<span class="fc bfc" id="L16" title="All 6 branches covered.">        diasRevision = if (f.diasRevision !in 7..90) &quot;Elige entre 7 y 90 días.&quot; else null,</span>
+<span class="fc bfc" id="L17" title="All 2 branches covered.">        ficticio = if (!f.ficticio) &quot;Confirma que usas datos ficticios.&quot; else null,</span>
+<span class="fc" id="L18">        respuestas = (0..3).map { i -&gt;</span>
+<span class="fc bfc" id="L19" title="All 2 branches covered.">            if (f.respuestas.getOrNull(i) !in respuestasValidas) &quot;Selecciona Sí, No o No sé.&quot; else null</span>
+        }
+<span class="fc" id="L21">    )</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

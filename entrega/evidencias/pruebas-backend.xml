@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="cl.tiotec.revision.RevisionApiTest" time="12.931" tests="6" errors="0" skipped="0" failures="0" flakes="0">
+<testcase name="cicloCrudConPersistencia" classname="cl.tiotec.revision.RevisionApiTest" time="1.7">
+    <system-out><![CDATA[19:42:43.831 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [cl.tiotec.revision.RevisionApiTest]: RevisionApiTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+19:42:44.133 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration cl.tiotec.RevisionesApplication for test class cl.tiotec.revision.RevisionApiTest
+19:42:44.347 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [cl.tiotec.revision.RevisionApiTest]: RevisionApiTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+19:42:44.355 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration cl.tiotec.RevisionesApplication for test class cl.tiotec.revision.RevisionApiTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.2)
+
+2026-11-22T19:42:45.108-03:00  INFO 16720 --- [tiotec-revisiones] [           main] cl.tiotec.revision.RevisionApiTest       : Starting RevisionApiTest using Java 21.0.11 with PID 16720 (started by tolor in [ruta local omitida]
+2026-11-22T19:42:45.111-03:00  INFO 16720 --- [tiotec-revisiones] [           main] cl.tiotec.revision.RevisionApiTest       : No active profile set, falling back to 1 default profile: "default"
+2026-11-22T19:42:46.378-03:00  INFO 16720 --- [tiotec-revisiones] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-22T19:42:46.494-03:00  INFO 16720 --- [tiotec-revisiones] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 95 ms. Found 1 JPA repository interface.
+2026-11-22T19:42:47.340-03:00  INFO 16720 --- [tiotec-revisiones] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-11-22T19:42:47.533-03:00  INFO 16720 --- [tiotec-revisiones] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.13.Final
+2026-11-22T19:42:48.834-03:00  INFO 16720 --- [tiotec-revisiones] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-22T19:42:48.932-03:00  INFO 16720 --- [tiotec-revisiones] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-11-22T19:42:49.485-03:00  INFO 16720 --- [tiotec-revisiones] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:pruebas user=SA
+2026-11-22T19:42:49.505-03:00  INFO 16720 --- [tiotec-revisiones] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-11-22T19:42:49.684-03:00  INFO 16720 --- [tiotec-revisiones] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:pruebas]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: PRUEBAS/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-11-22T19:42:52.287-03:00  INFO 16720 --- [tiotec-revisiones] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-22T19:42:52.429-03:00  INFO 16720 --- [tiotec-revisiones] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-22T19:42:52.647-03:00  INFO 16720 --- [tiotec-revisiones] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-11-22T19:42:54.343-03:00  INFO 16720 --- [tiotec-revisiones] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-11-22T19:42:54.343-03:00  INFO 16720 --- [tiotec-revisiones] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-22T19:42:54.348-03:00  INFO 16720 --- [tiotec-revisiones] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 3 ms
+2026-11-22T19:42:54.390-03:00  INFO 16720 --- [tiotec-revisiones] [           main] cl.tiotec.revision.RevisionApiTest       : Started RevisionApiTest in 9.929 seconds (process running for 21.228)
+]]></system-out>
+  </testcase>
+  <testcase name="rechazaNombreQueSoloCumpleAntesDeTrim" classname="cl.tiotec.revision.RevisionApiTest" time="0.011"/>
+  <testcase name="rechazaCamposInvalidos" classname="cl.tiotec.revision.RevisionApiTest" time="0.081"/>
+  <testcase name="conservaFechaYRecortaEspacios" classname="cl.tiotec.revision.RevisionApiTest" time="0.037"/>
+  <testcase name="recursosInexistentesNoSeCreanAlEditar" classname="cl.tiotec.revision.RevisionApiTest" time="0.022"/>
+  <testcase name="saludYListadoVacio" classname="cl.tiotec.revision.RevisionApiTest" time="0.032"/>
+</testsuite>

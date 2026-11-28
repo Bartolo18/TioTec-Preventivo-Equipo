@@ -1,0 +1,4 @@
+Comprobacion en emulador API 37, APK debug 1.4.
+La pantalla Mi sistema obtuvo el catalogo de Android desde endoflife.date.
+Se eligio Android 14 y se mostro el estado de soporte junto con la fecha de lanzamiento.
+Evidencia: sistema.png.

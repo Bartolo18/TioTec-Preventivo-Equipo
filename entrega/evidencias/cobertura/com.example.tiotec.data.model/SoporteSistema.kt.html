@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SoporteSistema.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Logica de TioTec</a> &gt; <a href="index.source.html" class="el_package">com.example.tiotec.data.model</a> &gt; <span class="el_source">SoporteSistema.kt</span></div><h1>SoporteSistema.kt</h1><pre class="source lang-java linenums">package com.example.tiotec.data.model
+
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+<span class="pc" id="L6">enum class SistemaConsulta(val etiqueta: String, val producto: String) {</span>
+<span class="fc" id="L7">    ANDROID(&quot;Android&quot;, &quot;android&quot;), WINDOWS(&quot;Windows&quot;, &quot;windows&quot;);</span>
+<span class="fc" id="L8">    val enlace: String get() = &quot;https://endoflife.date/$producto&quot;</span>
+}
+
+<span class="fc" id="L11">data class RespuestaSoporte(val result: ProductoSoporte? = null)</span>
+<span class="fc" id="L12">data class ProductoSoporte(val releases: List&lt;VersionSistema&gt;? = null)</span>
+<span class="fc" id="L13">data class VersionSistema(</span>
+<span class="fc" id="L14">    val name: String = &quot;&quot;,</span>
+<span class="pc" id="L15">    val label: String? = null,</span>
+<span class="fc" id="L16">    val releaseDate: String? = null,</span>
+<span class="pc" id="L17">    val isEol: Boolean? = null,</span>
+<span class="fc" id="L18">    val eolFrom: String? = null,</span>
+<span class="pc" id="L19">    val isMaintained: Boolean? = null</span>
+<span class="fc" id="L20">) {</span>
+<span class="pc bpc" id="L21" title="3 of 8 branches missed.">    fun titulo(): String = label?.takeIf { it.isNotBlank() } ?: name</span>
+<span class="fc" id="L22">    fun estadoSoporte(): String = when {</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">        isEol == true -&gt; &quot;Soporte finalizado&quot;</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        isMaintained == true -&gt; &quot;Soporte vigente&quot;</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        isEol == false -&gt; &quot;Soporte no finalizado&quot;</span>
+<span class="fc" id="L26">        else -&gt; &quot;Sin información confirmada de soporte&quot;</span>
+<span class="fc" id="L27">    }</span>
+<span class="fc" id="L28">    fun orientacion(): String = when {</span>
+<span class="fc bfc" id="L29" title="All 2 branches covered.">        isEol == true -&gt; &quot;Consulta con el fabricante una actualización compatible o una alternativa con soporte.&quot;</span>
+<span class="fc bfc" id="L30" title="All 4 branches covered.">        isMaintained == true || isEol == false -&gt; &quot;Revisa las actualizaciones disponibles en la configuración de tu equipo.&quot;</span>
+<span class="fc" id="L31">        else -&gt; &quot;Consulta el detalle de la fuente y la información de tu fabricante.&quot;</span>
+<span class="fc" id="L32">    }</span>
+}
+
+<span class="fc" id="L35">fun fechaSoporte(fecha: String?): String = try {</span>
+<span class="fc" id="L36">    LocalDate.parse(fecha).format(DateTimeFormatter.ofPattern(&quot;dd/MM/yyyy&quot;))</span>
+<span class="fc" id="L37">} catch (_: Exception) { &quot;No informada&quot; }</span>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

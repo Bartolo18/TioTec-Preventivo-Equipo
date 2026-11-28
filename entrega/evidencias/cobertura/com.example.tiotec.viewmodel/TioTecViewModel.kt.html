@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TioTecViewModel.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Logica de TioTec</a> &gt; <a href="index.source.html" class="el_package">com.example.tiotec.viewmodel</a> &gt; <span class="el_source">TioTecViewModel.kt</span></div><h1>TioTecViewModel.kt</h1><pre class="source lang-java linenums">package com.example.tiotec.viewmodel
+
+import android.app.Application
+import android.net.Uri
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.tiotec.data.FotoStorage
+import com.example.tiotec.data.Revision
+import com.example.tiotec.data.model.Errores
+import com.example.tiotec.data.model.Formulario
+import com.example.tiotec.repository.RevisionRepository
+import com.example.tiotec.validation.Validacion
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+<span class="fc" id="L20">data class PantallaEstado(</span>
+<span class="fc" id="L21">    val formulario: Formulario = Formulario(),</span>
+<span class="fc" id="L22">    val errores: Errores = Errores(),</span>
+<span class="fc" id="L23">    val validarMientrasEscribe: Boolean = false,</span>
+<span class="fc" id="L24">    val revisiones: List&lt;Revision&gt; = emptyList(),</span>
+<span class="fc" id="L25">    val seleccionada: Long? = null,</span>
+<span class="fc" id="L26">    val ocupado: Boolean = false,</span>
+<span class="fc" id="L27">    val aviso: String = &quot;&quot;,</span>
+<span class="fc" id="L28">    val avisoError: Boolean = false,</span>
+<span class="fc" id="L29">    val avisoId: Int = 0</span>
+<span class="fc" id="L30">)</span>
+
+<span class="pc" id="L32">class TioTecViewModel @JvmOverloads constructor(</span>
+    application: Application,
+<span class="pc" id="L34">    private val repositorio: com.example.tiotec.data.RevisionStore = RevisionRepository(application),</span>
+<span class="pc" id="L35">    private val fotos: com.example.tiotec.data.FotoStore = FotoStorage(application),</span>
+<span class="pc" id="L36">    private val io: kotlinx.coroutines.CoroutineDispatcher = Dispatchers.IO</span>
+<span class="pc" id="L37">) : AndroidViewModel(application) {</span>
+    private var versionFormulario = 0
+<span class="fc" id="L39">    private val mutableEstado = MutableStateFlow(PantallaEstado())</span>
+<span class="fc" id="L40">    val estado: StateFlow&lt;PantallaEstado&gt; = mutableEstado</span>
+
+<span class="fc" id="L42">    init {</span>
+<span class="fc" id="L43">        viewModelScope.launch {</span>
+<span class="fc" id="L44">            repositorio.observar().collect { lista -&gt;</span>
+<span class="fc" id="L45">                mutableEstado.update { actual -&gt;</span>
+<span class="fc" id="L46">                    actual.copy(</span>
+<span class="fc" id="L47">                        revisiones = lista,</span>
+<span class="pc bpc" id="L48" title="1 of 8 branches missed.">                        seleccionada = actual.seleccionada?.takeIf { id -&gt; lista.any { it.id == id } }</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">                            ?: lista.firstOrNull()?.id</span>
+<span class="fc" id="L50">                    )</span>
+                }
+<span class="fc" id="L52">            }</span>
+<span class="nc" id="L53">        }</span>
+<span class="fc" id="L54">    }</span>
+
+    private fun cambiarFormulario(nuevo: Formulario, mostrar: (Errores, Errores) -&gt; Errores) {
+<span class="fc" id="L57">        mutableEstado.update { actual -&gt;</span>
+<span class="fc" id="L58">            val revisados = Validacion.revisar(nuevo)</span>
+<span class="fc" id="L59">            actual.copy(</span>
+<span class="fc" id="L60">                formulario = nuevo,</span>
+<span class="fc bfc" id="L61" title="All 2 branches covered.">                errores = if (actual.validarMientrasEscribe) revisados else mostrar(actual.errores, revisados)</span>
+<span class="fc" id="L62">            )</span>
+        }
+<span class="fc" id="L64">    }</span>
+
+<span class="fc" id="L66">    fun nombre(valor: String) = cambiarFormulario(estado.value.formulario.copy(nombre = valor)) { anterior, nuevo -&gt;</span>
+<span class="fc" id="L67">        anterior.copy(nombre = nuevo.nombre)</span>
+<span class="fc" id="L68">    }</span>
+<span class="fc" id="L69">    fun dispositivo(valor: String) = cambiarFormulario(estado.value.formulario.copy(dispositivo = valor)) { anterior, nuevo -&gt;</span>
+<span class="nc" id="L70">        anterior.copy(dispositivo = nuevo.dispositivo)</span>
+<span class="fc" id="L71">    }</span>
+<span class="fc" id="L72">    fun sistema(valor: String) = cambiarFormulario(estado.value.formulario.copy(sistema = valor)) { anterior, nuevo -&gt;</span>
+<span class="nc" id="L73">        anterior.copy(sistema = nuevo.sistema)</span>
+<span class="fc" id="L74">    }</span>
+<span class="fc" id="L75">    fun experiencia(valor: String) = cambiarFormulario(estado.value.formulario.copy(experiencia = valor)) { anterior, nuevo -&gt;</span>
+<span class="nc" id="L76">        anterior.copy(experiencia = nuevo.experiencia)</span>
+<span class="fc" id="L77">    }</span>
+<span class="fc" id="L78">    fun diasRevision(valor: Int) = cambiarFormulario(estado.value.formulario.copy(diasRevision = valor)) { anterior, nuevo -&gt;</span>
+<span class="fc" id="L79">        anterior.copy(diasRevision = nuevo.diasRevision)</span>
+<span class="fc" id="L80">    }</span>
+<span class="fc" id="L81">    fun ficticio(valor: Boolean) = cambiarFormulario(estado.value.formulario.copy(ficticio = valor)) { anterior, nuevo -&gt;</span>
+<span class="fc" id="L82">        anterior.copy(ficticio = nuevo.ficticio)</span>
+<span class="fc" id="L83">    }</span>
+    fun respuesta(indice: Int, valor: String) {
+<span class="fc" id="L85">        val lista = estado.value.formulario.respuestas.toMutableList()</span>
+<span class="fc bfc" id="L86" title="All 6 branches covered.">        if (indice in lista.indices) {</span>
+<span class="fc" id="L87">            lista[indice] = valor</span>
+<span class="fc" id="L88">            cambiarFormulario(estado.value.formulario.copy(respuestas = lista)) { anterior, nuevo -&gt;</span>
+<span class="fc" id="L89">                val errores = anterior.respuestas.toMutableList()</span>
+<span class="fc" id="L90">                errores[indice] = nuevo.respuestas[indice]</span>
+<span class="fc" id="L91">                anterior.copy(respuestas = errores)</span>
+            }
+        }
+<span class="fc" id="L94">    }</span>
+
+    fun nueva() {
+<span class="fc" id="L97">        liberarFotoSinGuardar()</span>
+<span class="fc" id="L98">        versionFormulario++</span>
+<span class="fc" id="L99">        mutableEstado.update { it.copy(formulario = Formulario(), errores = Errores(), validarMientrasEscribe = false) }</span>
+<span class="fc" id="L100">    }</span>
+
+    fun editar(revision: Revision) {
+<span class="fc" id="L103">        liberarFotoSinGuardar()</span>
+<span class="fc" id="L104">        versionFormulario++</span>
+<span class="fc" id="L105">        mutableEstado.update {</span>
+<span class="fc" id="L106">            it.copy(</span>
+<span class="fc" id="L107">                formulario = Formulario(</span>
+<span class="fc" id="L108">                    id = revision.id, nombre = revision.nombre, dispositivo = revision.dispositivo,</span>
+<span class="fc" id="L109">                    sistema = revision.sistema, experiencia = revision.experiencia, foto = revision.foto,</span>
+<span class="fc" id="L110">                    diasRevision = revision.diasRevision,</span>
+<span class="fc" id="L111">                    ficticio = true, respuestas = revision.respuestas</span>
+                ),
+<span class="fc" id="L113">                errores = Errores(), validarMientrasEscribe = false</span>
+<span class="fc" id="L114">            )</span>
+        }
+<span class="fc" id="L116">    }</span>
+
+    private fun liberarFotoSinGuardar() {
+<span class="fc" id="L119">        val actual = estado.value</span>
+<span class="fc" id="L120">        val ruta = actual.formulario.foto</span>
+<span class="fc bfc" id="L121" title="All 6 branches covered.">        if (ruta.isNotBlank() &amp;&amp; actual.revisiones.none { it.foto == ruta }) {</span>
+<span class="fc" id="L122">            viewModelScope.launch(io) { fotos.borrarFoto(ruta) }</span>
+        }
+<span class="fc" id="L124">    }</span>
+
+<span class="fc" id="L126">    fun seleccionar(id: Long) { mutableEstado.update { it.copy(seleccionada = id) } }</span>
+
+<span class="fc" id="L128">    fun avisar(texto: String, error: Boolean = false) {</span>
+<span class="fc" id="L129">        mutableEstado.update { it.copy(aviso = texto, avisoError = error, avisoId = it.avisoId + 1) }</span>
+<span class="fc" id="L130">    }</span>
+
+    fun limpiarAviso(id: Int) {
+<span class="fc bfc" id="L133" title="All 2 branches covered.">        mutableEstado.update { if (it.avisoId == id) it.copy(aviso = &quot;&quot;) else it }</span>
+<span class="fc" id="L134">    }</span>
+
+    suspend fun guardar(): Boolean {
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        if (estado.value.ocupado) return false</span>
+<span class="fc" id="L138">        val form = estado.value.formulario</span>
+<span class="fc" id="L139">        val errores = Validacion.revisar(form)</span>
+<span class="fc bfc" id="L140" title="All 4 branches covered.">        if (errores.hayErrores || !fotos.existe(form.foto)) {</span>
+<span class="fc" id="L141">            mutableEstado.update {</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">                it.copy(errores = if (fotos.existe(form.foto)) errores else errores.copy(foto = &quot;Selecciona una foto válida.&quot;),</span>
+<span class="fc" id="L143">                    validarMientrasEscribe = true)</span>
+            }
+<span class="fc" id="L145">            avisar(&quot;Revisa los campos marcados.&quot;, true)</span>
+<span class="fc" id="L146">            return false</span>
+        }
+<span class="fc" id="L148">        mutableEstado.update { it.copy(ocupado = true) }</span>
+<span class="fc" id="L149">        return try {</span>
+<span class="fc" id="L150">            val id = withContext(io) {</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">                val anterior = if (form.id == 0L) null else repositorio.buscar(form.id)</span>
+<span class="fc bfc" id="L152" title="All 4 branches covered.">                if (form.id != 0L &amp;&amp; anterior == null) error(&quot;La revisión ya no existe.&quot;)</span>
+<span class="fc" id="L153">                val revision = Revision(</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">                    id = form.id, fecha = anterior?.fecha ?: System.currentTimeMillis(),</span>
+<span class="fc" id="L155">                    nombre = form.nombre.trim(), dispositivo = form.dispositivo.trim(),</span>
+<span class="fc" id="L156">                    sistema = form.sistema.trim(), experiencia = form.experiencia, foto = form.foto,</span>
+<span class="fc" id="L157">                    diasRevision = form.diasRevision,</span>
+<span class="fc" id="L158">                    respaldo = form.respuestas[0], actualizacion = form.respuestas[1],</span>
+<span class="fc" id="L159">                    autenticacion = form.respuestas[2], recuperacion = form.respuestas[3],</span>
+<span class="fc" id="L160">                    accionesHechas = (0..3).fold(0) { mascara, i -&gt;</span>
+<span class="fc bfc" id="L161" title="All 4 branches covered.">                        if (anterior != null &amp;&amp; form.respuestas[i] != &quot;Sí&quot; &amp;&amp;</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">                            form.respuestas[i] == anterior.respuestas[i] &amp;&amp;</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">                            anterior.accionesHechas and (1 shl i) != 0</span>
+<span class="fc" id="L164">                        ) mascara or (1 shl i) else mascara</span>
+                    }
+                )
+<span class="fc bfc" id="L167" title="All 2 branches covered.">                val guardado = repositorio.guardar(revision, anterior == null)</span>
+<span class="fc bfc" id="L168" title="All 4 branches covered.">                if (anterior != null &amp;&amp; anterior.foto != form.foto) fotos.borrarFoto(anterior.foto)</span>
+<span class="fc" id="L169">                guardado</span>
+            }
+<span class="fc" id="L171">            mutableEstado.update {</span>
+<span class="fc" id="L172">                it.copy(formulario = Formulario(), errores = Errores(), validarMientrasEscribe = false,</span>
+<span class="fc" id="L173">                    seleccionada = id, ocupado = false)</span>
+            }
+<span class="fc" id="L175">            versionFormulario++</span>
+<span class="fc" id="L176">            avisar(&quot;Evaluación guardada en este dispositivo.&quot;)</span>
+<span class="fc" id="L177">            true</span>
+<span class="fc" id="L178">        } catch (_: Exception) {</span>
+<span class="fc" id="L179">            mutableEstado.update { it.copy(ocupado = false) }</span>
+<span class="fc" id="L180">            avisar(&quot;No se pudo guardar. Intenta de nuevo.&quot;, true)</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">            false</span>
+        }
+    }
+
+    fun eliminar(revision: Revision) {
+<span class="fc" id="L186">        viewModelScope.launch {</span>
+<span class="fc" id="L187">            try {</span>
+<span class="fc" id="L188">                withContext(io) {</span>
+<span class="fc" id="L189">                    repositorio.eliminar(revision)</span>
+<span class="fc" id="L190">                    fotos.borrarFoto(revision.foto)</span>
+<span class="fc" id="L191">                }</span>
+<span class="pc bpc" id="L192" title="1 of 2 branches missed.">                if (estado.value.formulario.id == revision.id) nueva()</span>
+<span class="fc" id="L193">                avisar(&quot;Evaluación eliminada.&quot;)</span>
+<span class="fc" id="L194">            } catch (_: Exception) { avisar(&quot;No se pudo eliminar.&quot;, true) }</span>
+<span class="fc" id="L195">        }</span>
+<span class="fc" id="L196">    }</span>
+
+    fun marcarAccion(revision: Revision, indice: Int, hecha: Boolean) {
+<span class="pc bpc" id="L199" title="1 of 6 branches missed.">        if (indice !in 0..3) return</span>
+<span class="fc" id="L200">        val bit = 1 shl indice</span>
+<span class="fc" id="L201">        viewModelScope.launch {</span>
+<span class="fc" id="L202">            try { withContext(io) { repositorio.marcarAccion(revision.id, bit, hecha) } }</span>
+<span class="fc" id="L203">            catch (_: Exception) { avisar(&quot;No se pudo guardar el avance.&quot;, true) }</span>
+<span class="fc" id="L204">        }</span>
+<span class="fc" id="L205">    }</span>
+
+<span class="fc" id="L207">    fun prepararCamara(): Uri? = try {</span>
+<span class="nc" id="L208">        Uri.parse(fotos.nuevaCaptura())</span>
+<span class="fc" id="L209">    } catch (_: Exception) {</span>
+<span class="fc" id="L210">        avisar(&quot;No se pudo abrir la cámara.&quot;, true)</span>
+<span class="fc" id="L211">        null</span>
+<span class="fc" id="L212">    }</span>
+
+    fun errorCamara(uri: Uri) {
+<span class="nc" id="L215">        fotos.borrarCaptura(uri.toString())</span>
+<span class="nc" id="L216">        avisar(&quot;No hay una cámara disponible.&quot;, true)</span>
+<span class="nc" id="L217">    }</span>
+
+    fun resultadoCamara(uri: Uri?, exito: Boolean) {
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">        if (uri == null) {</span>
+<span class="fc" id="L221">            avisar(&quot;No se pudo recuperar la captura. Intenta otra vez.&quot;, true)</span>
+<span class="fc" id="L222">            return</span>
+        }
+<span class="nc bnc" id="L224" title="All 2 branches missed.">        if (exito) importarFoto(uri, true) else {</span>
+<span class="nc" id="L225">            fotos.borrarCaptura(uri.toString())</span>
+<span class="nc" id="L226">            avisar(&quot;Captura cancelada.&quot;)</span>
+        }
+<span class="nc" id="L228">    }</span>
+
+    fun resultadoGaleria(uri: Uri?) {
+<span class="pc bpc" id="L231" title="1 of 2 branches missed.">        if (uri == null) avisar(&quot;Selección cancelada.&quot;) else importarFoto(uri, false)</span>
+<span class="fc" id="L232">    }</span>
+
+    private fun importarFoto(uri: Uri, esCaptura: Boolean) {
+<span class="nc" id="L235">        val version = versionFormulario</span>
+<span class="nc" id="L236">        viewModelScope.launch {</span>
+<span class="nc" id="L237">            mutableEstado.update { it.copy(ocupado = true) }</span>
+<span class="nc" id="L238">            try {</span>
+<span class="nc" id="L239">                val ruta = withContext(io) { fotos.importar(uri) }</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">                if (version != versionFormulario) {</span>
+<span class="nc" id="L241">                    withContext(io) { fotos.borrarFoto(ruta) }</span>
+<span class="nc" id="L242">                    avisar(&quot;La foto se descartó porque cambiaste de formulario.&quot;, true)</span>
+<span class="nc" id="L243">                    return@launch</span>
+                }
+<span class="nc" id="L245">                val anterior = estado.value.formulario.foto</span>
+<span class="nc" id="L246">                val guardada = estado.value.revisiones.any { it.foto == anterior }</span>
+<span class="nc" id="L247">                cambiarFormulario(estado.value.formulario.copy(foto = ruta)) { anteriorError, nuevoError -&gt;</span>
+<span class="nc" id="L248">                    anteriorError.copy(foto = nuevoError.foto)</span>
+                }
+<span class="nc bnc" id="L250" title="All 6 branches missed.">                if (!guardada &amp;&amp; anterior.isNotBlank()) withContext(io) { fotos.borrarFoto(anterior) }</span>
+<span class="nc" id="L251">                avisar(&quot;Foto agregada.&quot;)</span>
+<span class="nc" id="L252">            } catch (_: Exception) { avisar(&quot;No se pudo leer la imagen. Elige otra foto.&quot;, true) }</span>
+            finally {
+<span class="nc bnc" id="L254" title="All 2 branches missed.">                if (esCaptura) fotos.borrarCaptura(uri.toString())</span>
+<span class="nc" id="L255">                mutableEstado.update { it.copy(ocupado = false) }</span>
+            }
+<span class="nc" id="L257">        }</span>
+<span class="nc" id="L258">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

@@ -1,0 +1,4 @@
+Comprobacion manual en emulador API 37 con APK debug 1.4.
+Crear, listar, editar y eliminar desde la pantalla Servidor: aprobados.
+Se comprobaron los cambios por HTTP contra H2 en una base separada.
+El release firmado se verifico con apksigner; no se reemplazo la instalacion debug por tener una firma distinta.

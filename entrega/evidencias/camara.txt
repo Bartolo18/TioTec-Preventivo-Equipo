@@ -1,0 +1,15 @@
+Comprobacion real de camara - 25 de noviembre de 2026
+App debug 1.4, emulador emulator-5554, API 37.
+
+1. Se abrio Tomar foto desde el formulario vacio.
+2. Android solicito permiso de camara; se concedio solo por esta vez.
+3. Se disparo la camara del emulador y se confirmo con Done.
+4. La app mostro Foto agregada y la vista previa Foto del dispositivo.
+5. La imagen se importo al almacenamiento privado de la app.
+   Formato: JPEG. Dimensiones: 1200 x 1600. Bytes: 24296.
+
+Se comprobo captura, confirmacion, importacion y vista previa. Esta prueba
+no guardo una evaluacion en Room ni comprobo el selector de galeria.
+
+Al abrir Nueva evaluacion, la app descarto la foto sin guardar.
+Se verifico que el conjunto de archivos privados regreso al estado inicial.

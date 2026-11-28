@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RevisionRemota.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Logica de TioTec</a> &gt; <a href="index.source.html" class="el_package">com.example.tiotec.data.model</a> &gt; <span class="el_source">RevisionRemota.kt</span></div><h1>RevisionRemota.kt</h1><pre class="source lang-java linenums">package com.example.tiotec.data.model
+
+<span class="fc" id="L3">data class DatosRevision(</span>
+<span class="fc" id="L4">    val nombre: String = &quot;&quot;,</span>
+<span class="fc" id="L5">    val dispositivo: String = &quot;&quot;,</span>
+<span class="fc" id="L6">    val sistema: String = &quot;&quot;,</span>
+<span class="fc" id="L7">    val experiencia: String = &quot;Básico&quot;,</span>
+<span class="fc" id="L8">    val diasRevision: Int = 30,</span>
+<span class="fc bfc" id="L9" title="All 2 branches covered.">    val respuestas: List&lt;String&gt; = List(4) { &quot;&quot; },</span>
+<span class="pc" id="L10">    val accionesHechas: Int = 0</span>
+<span class="fc" id="L11">) {</span>
+<span class="fc" id="L12">    fun errores(): List&lt;String&gt; = buildList {</span>
+<span class="pc bpc" id="L13" title="1 of 6 branches missed.">        if (nombre.trim().length !in 2..40) add(&quot;Nombre ficticio: entre 2 y 40 caracteres.&quot;)</span>
+<span class="pc bpc" id="L14" title="1 of 6 branches missed.">        if (dispositivo.trim().length !in 2..50) add(&quot;Dispositivo: entre 2 y 50 caracteres.&quot;)</span>
+<span class="pc bpc" id="L15" title="1 of 6 branches missed.">        if (sistema.trim().length !in 2..30) add(&quot;Sistema: entre 2 y 30 caracteres.&quot;)</span>
+<span class="fc bfc" id="L16" title="All 2 branches covered.">        if (experiencia !in experiencias) add(&quot;Selecciona un nivel válido.&quot;)</span>
+<span class="pc bpc" id="L17" title="1 of 6 branches missed.">        if (diasRevision !in 7..90) add(&quot;La próxima revisión debe ser entre 7 y 90 días.&quot;)</span>
+<span class="fc bfc" id="L18" title="All 6 branches covered.">        if (respuestas.size != 4 || respuestas.any { it !in respuestasValidas }) add(&quot;Responde las cuatro preguntas.&quot;)</span>
+<span class="fc bfc" id="L19" title="All 6 branches covered.">        if (accionesHechas !in 0..15) add(&quot;El avance de acciones no es válido.&quot;)</span>
+<span class="fc" id="L20">    }</span>
+<span class="fc" id="L21">    fun normalizados() = copy(nombre = nombre.trim(), dispositivo = dispositivo.trim(), sistema = sistema.trim())</span>
+}
+<span class="fc" id="L23">data class RevisionRemota(</span>
+<span class="fc" id="L24">    val id: Long,</span>
+<span class="fc" id="L25">    val fecha: Long,</span>
+<span class="fc" id="L26">    val nombre: String,</span>
+<span class="pc" id="L27">    val dispositivo: String,</span>
+<span class="pc" id="L28">    val sistema: String,</span>
+<span class="pc" id="L29">    val experiencia: String,</span>
+<span class="pc" id="L30">    val diasRevision: Int,</span>
+<span class="pc" id="L31">    val respuestas: List&lt;String&gt;,</span>
+<span class="pc" id="L32">    val accionesHechas: Int</span>
+) {
+<span class="fc" id="L34">    fun datos() = DatosRevision(nombre, dispositivo, sistema, experiencia, diasRevision, respuestas, accionesHechas)</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.15.202606040825</span></div></body></html>

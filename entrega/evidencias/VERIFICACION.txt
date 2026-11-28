@@ -1,0 +1,116 @@
+TioTec Preventivo - Experiencia de Aprendizaje 3
+Pruebas de logica, backend y APIs: 22 de noviembre de 2026
+Revision del ZIP, firma y pruebas de pantalla: 25 de noviembre de 2026
+Version Android: 1.4 (versionCode 5)
+
+COMPROBADO
+
+- Compilacion Android debug y release: aprobada.
+- Pruebas de logica ejecutadas con JUnit Platform: 36 aprobadas, 0 fallidas.
+  Incluyen los 25 casos JUnit existentes y 11 casos Kotest con MockK.
+- Pruebas de integracion Spring Boot con MockMvc y H2: 6 aprobadas, 0 fallidas.
+- Cobertura JaCoCo de logica: 430 de 472 lineas, 91,10%.
+- Cobertura de ViewModel y Repository: 322 de 364 lineas, 88,46%.
+- API del backend en ejecucion: POST, GET de lista y detalle, PUT y DELETE aprobados.
+  Esta comprobacion utilizo una base H2 separada de los datos del proyecto.
+- CRUD desde la app en emulador API 37: crear, listar, editar y eliminar aprobados.
+- API externa desde la app: catalogo Android, seleccion de version y resultado aprobados.
+- Estas comprobaciones moviles se realizaron con la variante debug 1.4.
+- APK release 1.4: generado y firma verificada con apksigner.
+  No se reemplazo la instalacion debug existente por tener otra firma.
+- Se conserva la misma llave, ahora en firma/Grupo3.jks.
+- El JAR incluido coincide con las 8 clases compiladas del backend y su configuracion.
+
+ALCANCE DE LAS PRUEBAS
+
+Las pruebas JVM se compilaron con Gradle y se ejecutaron con JUnit Platform
+utilizando el classpath del proyecto. JaCoCo midio data/model, validation,
+repository y viewmodel. No se incluyen las pantallas, MainActivity ni
+adaptadores Android de archivos/camara en esa metrica.
+
+Las pruebas de API y los mocks no sustituyen una prueba del telefono con su
+conexion real. El backend mantiene la misma implementacion de esta revision.
+
+PENDIENTE
+
+- Completar Lint release y una nueva compilacion release con el XML corregido.
+  El analisis lintVitalAnalyzeRelease termino; lintVitalReportRelease fallo al
+  escribir su informe. Java informa que su carpeta no es modificable en este
+  entorno. No se desactivo Lint ni se ocultaron errores con una baseline.
+  Por ello assembleRelease NO se registra como aprobado en esta revision.
+  El APK incluido sigue siendo el APK firmado comprobado el 22 de noviembre.
+- Completar la comprobacion de galeria y el guardado/recuperacion de fotos
+  en una evaluacion despues de reiniciar la app. La captura y vista previa
+  de camara SI se comprobaron el 25 de noviembre; consultar camara.txt.
+- Adjuntar las capturas reales de APK y JKS que pide la pauta.
+- Adjuntar las evidencias reales de Trello y aportes por integrante.
+- Publicar el codigo y el APK cuando lo decida el equipo. No se hicieron
+  cambios en GitHub durante esta revision.
+
+EVIDENCIAS
+
+pruebas-app.txt              Resultado de las 36 pruebas de logica.
+pruebas-backend.xml          Resultado de las 6 pruebas del backend.
+cobertura/index.html        Reporte JaCoCo de la logica.
+cobertura/cobertura.xml      Metricas de cobertura.
+crud-http.txt               Comprobacion HTTP real del CRUD.
+firma-apk.txt               Verificacion de la firma del APK 1.4.
+SHA256.txt                  Huella del APK incluido.
+
+crud-movil.txt              Comprobacion del CRUD desde la app.
+api-externa.txt             Comprobacion de la consulta externa desde la app.
+servidor.png                Captura real de una evaluacion editada en el servidor.
+sistema.png                 Captura real del resultado de la consulta de soporte.
+
+REVISION DEL ZIP - 25 DE NOVIEMBRE DE 2026
+
+- AppTioTec_Grupo3.zip contiene 9285 archivos y paso la comprobacion CRC.
+- Su codigo y configuracion coincidieron con la carpeta del proyecto en el PC
+  antes del ajuste de dependencia de pruebas realizado en esta revision.
+- Incluye codigo Android, backend, pruebas, Gradle Wrapper, README, APK y JKS.
+- La mayor parte del tamano corresponde a cache de compilacion; el codigo
+  no necesita esas carpetas para entregarse o abrirse en otro computador.
+- network_security_config.xml incluye includeSubdomains="false" en las tres
+  direcciones locales. Se conserva HTTPS como regla general.
+- Se ajusto solamente una dependencia de androidTest: espresso-core 3.7.0.
+  Corrige InputManager.getInstance en Android reciente, segun las notas
+  oficiales de AndroidX Test. No cambia las funciones de la app.
+- assembleDebug y assembleDebugAndroidTest completados en una carpeta de
+  compilacion temporal, fuera del proyecto entregado.
+- Pruebas instrumentadas: 5 ejecutadas, 5 aprobadas, en emulator-5554 API 37.
+  Se uso el mismo certificado debug existente, sin desinstalar ni borrar datos.
+- Se volvio a verificar la firma del APK de entrega con apksigner: valida.
+
+CORRESPONDENCIA CON AVA
+
+- Guia 14, paginas 2 a 6: ui/screens, viewmodel, data/model, data/remote y
+  repository; ApiService.kt, RetrofitInstance.kt y consumo Retrofit con MVVM.
+- Guia 14, pagina 7: el ejercicio usa JSONPlaceholder/posts. En el proyecto
+  se adapto el mismo patron a endoflife.date y al servidor de evaluaciones.
+  La pauta 4 pide una API externa coherente; no fija ese proveedor.
+- Guia 15, paginas 2 a 6: pruebas de logica en src/test con Kotest y MockK,
+  JUnit Platform y pruebas Compose en src/androidTest con la regla JUnit 4
+  que utiliza el ejemplo de la propia guia. Los tests anteriores se conservan.
+- Pauta 4, paginas 3 y 5: microservicio Spring Boot con base de datos, CRUD
+  desde la app, API externa separada, cobertura de logica y APK firmado.
+- Room guarda el historial del dispositivo. H2 guarda los datos del backend
+  en el PC; es una eleccion tecnica, no un proveedor de nube exigido por AVA.
+- No hay carga inicial de perfiles, nombres ni dispositivos de ejemplo en la
+  app. Nombre y dispositivo comienzan vacios. Los nombres de src/test y
+  src/androidTest solo son datos aislados para comprobar las pruebas.
+- El equipo confirma que el docente autorizo un alcance reducido a
+  evaluaciones, historial y APIs. No se consideran pendientes las funciones
+  adicionales del caso original: notificaciones, administracion y asistencia.
+- Camara comprobada: permiso, captura, confirmacion, importacion JPEG
+  1200 x 1600 y vista previa. Al descartar el formulario se verifico la
+  eliminacion de la foto sin guardar. No se crearon registros en el historial.
+- Se mantienen pendientes las comprobaciones de fotos indicadas arriba y
+  las capturas reales de APK/JKS, Trello y aportes por integrante.
+  No se modifico GitHub.
+
+Referencia tecnica del ajuste de pruebas:
+https://developer.android.com/jetpack/androidx/releases/test#espresso_3.7.0
+
+pruebas-pantalla.txt         Salida real de AndroidJUnitRunner: OK (5 tests).
+
+camara.txt                  Comprobacion real de captura y vista previa.

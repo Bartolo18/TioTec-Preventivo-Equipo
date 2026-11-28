@@ -1,0 +1,1 @@
+Lineas cubiertas: 430 de 472 (91.10%)
