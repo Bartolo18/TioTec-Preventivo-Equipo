@@ -139,7 +139,7 @@ El detalle de las verificaciones se encuentra en `entrega/evidencias/VERIFICACIO
 
 ## APK firmado
 
-El APK de entrega está en `entrega/TioTec-firmado.apk`. La llave académica está en `firma/Grupo3.jks` y su alias es `tiotec`. El archivo `entrega/evidencias/firma-apk.txt` contiene la verificación del certificado.
+El APK de entrega está en `entrega/TioTec-firmado.apk`. La llave académica está en `firma/Grupo3.jks` y su alias es `tiotec`.
 
 Para generar el APK desde Android Studio:
 
@@ -154,9 +154,18 @@ La configuración de firma `Grupo3` está en `app/build.gradle.kts` y lee los da
 .\gradlew.bat assembleRelease
 ```
 
-### Captura del APK firmado y de la llave
+### Verificación de la firma
+
+El informe confirma que el APK se verificó con el esquema de firma v2.
+
+[Ver informe de verificación de la firma](entrega/evidencias/firma-apk.txt)
+
+<details>
+<summary>Ver captura del APK firmado y de la llave</summary>
 
 ![APK TioTec-firmado.apk y llave Grupo3.jks en sus carpetas de entrega](entrega/evidencias/Firma-apk.png)
+
+</details>
 
 ## Trabajo en equipo
 
