@@ -1,7 +1,0 @@
-JaCoCo 0.8.15 (Eclipse Public License 2.0).
-Herramienta distribuida con IntelliJ IDEA 2026.2.2, plugin java-coverage.
-Se incluye para reproducir las mediciones sin descargar dependencias adicionales.
-Sitio oficial: https://www.jacoco.org/jacoco/
-Licencia: https://www.eclipse.org/legal/epl-2.0/
-El archivo jacoco.jar contiene la biblioteca Ant, el agente y ASM.
-

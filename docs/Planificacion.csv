@@ -1,9 +1,0 @@
-Tarea,Estado tecnico,Responsable por confirmar,Evidencia
-"Conservar formulario y persistencia Room","Incluido en proyecto base","Equipo","Codigo original"
-"Crear microservicio de evaluaciones","Implementado y pruebas aprobadas","Equipo","backend/src y reporte de pruebas"
-"Conectar CRUD desde Compose con Retrofit","Implementado; verificar informe final","Equipo","NubeScreen y NubeViewModel"
-"Integrar API de avisos publicos","Implementado; verificar conectividad real","Equipo","AvisosScreen y Servicios"
-"Pruebas y cobertura de logica","Verificar informe final","Equipo","app/src/test"
-"Generar y verificar APK firmado","Verificar informe final","Equipo","entrega"
-"Ensayar modificacion individual","Pendiente de cada estudiante","Barbara y Christopher","Practica individual"
-

@@ -56,7 +56,7 @@ La API externa entrega un catálogo. Después de descargarlo, la persona elige u
 
 Se utiliza Java 21 para Gradle, Android SDK 35 y un emulador o teléfono con Android 13 / API 33 o superior. Para compilar el backend se necesita Maven. La primera sincronización requiere internet.
 
-1. Extraer el ZIP y abrir en Android Studio la carpeta extraída que contiene `settings.gradle.kts` y `app`.
+1. Extraer el ZIP y abrir en Android Studio la carpeta `TioTec`, que contiene `settings.gradle.kts` y `app`.
 2. Sincronizar Gradle y comprobar que Android Studio tiene configurado el SDK del computador. `local.properties` se genera en cada equipo.
 3. Abrir `backend` como proyecto Maven en el IDE y ejecutar `RevisionesApplication`. También puede iniciarse desde una terminal en `backend`:
 
@@ -64,10 +64,9 @@ Se utiliza Java 21 para Gradle, Android SDK 35 y un emulador o teléfono con And
 mvn spring-boot:run
 ```
 
-Para generar y ejecutar el JAR desde `backend`:
+Si se usa el JAR incluido, ejecutarlo desde `backend`:
 
 ```powershell
-mvn package
 java -jar target/revisiones-1.1.0.jar
 ```
 
@@ -98,7 +97,7 @@ Las pruebas de lógica están en `app/src/test/java` y las de pantalla en `app/s
 - Las pruebas Compose utilizan `createAndroidComposeRule`, como el ejemplo de pantalla de la guía.
 - El backend tiene pruebas de integración con MockMvc y una base H2 en memoria.
 
-En la copia local de la entrega, las cinco pruebas de pantalla se ejecutaron correctamente en el emulador API 37 el 25 de noviembre de 2026. Se utiliza Espresso 3.7.0 para corregir la compatibilidad de la herramienta de pruebas con Android reciente. La salida real está en `entrega/evidencias/pruebas-pantalla.txt`.
+Las cinco pruebas de pantalla se ejecutaron correctamente en el emulador API 37 el 25 de noviembre de 2026. Se utiliza Espresso 3.7.0 para corregir la compatibilidad de la herramienta de pruebas con Android reciente. La salida real está en `entrega/evidencias/pruebas-pantalla.txt`.
 
 Desde la raíz del proyecto Android:
 
@@ -140,6 +139,8 @@ La pauta pide una captura del APK y del JKS. Falta adjuntar la captura real ante
 
 ## Trabajo en equipo
 
-Usamos Trello para organizar las tareas de esta entrega. En el tablero iremos registrando qué toma cada integrante y qué queda pendiente para la presentación.
+Repositorio: https://github.com/Bartolo18/TioTec-Preventivo-Equipo
 
-[Tablero de TíoTec en Trello](https://trello.com/b/e0OPKumv/tiotec-parciales-2-y-3)
+Trello: https://trello.com/b/e0OPKumv/tiotec-parciales-2-y-3
+
+La entrega debe incluir las evidencias reales de tareas y aportes de cada integrante. Falta comprobar esas evidencias y adjuntar las capturas correspondientes. Esta revisión del proyecto se mantiene local y no se ha publicado en GitHub.

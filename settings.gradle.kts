@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AppTioTec_Simple"
+rootProject.name = "AppTioTec_Grupo3"
 include(":app")
