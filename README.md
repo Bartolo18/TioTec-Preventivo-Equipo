@@ -156,7 +156,7 @@ La configuración de firma `Grupo3` está en `app/build.gradle.kts` y lee los da
 
 ### Captura del APK firmado y de la llave
 
-![APK TioTec-firmado.apk y llave Grupo3.jks en sus carpetas de entrega](entrega/evidencias/firma-apk.png)
+![APK TioTec-firmado.apk y llave Grupo3.jks en sus carpetas de entrega](entrega/evidencias/Firma-apk.png)
 
 ## Trabajo en equipo
 
